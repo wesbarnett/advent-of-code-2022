@@ -10,3 +10,12 @@ if __name__ == "__main__":
 
     lines = Path(args.infile).read_text().rstrip("\n").split("\n\n")
     print(max([sum(int(z) for z in y) for y in [x.split("\n") for x in lines]]))
+
+    print(
+        sum(
+            sorted(
+                [sum(int(z) for z in y) for y in [x.split("\n") for x in lines]],
+                reverse=True,
+            )[:3]
+        )
+    )
