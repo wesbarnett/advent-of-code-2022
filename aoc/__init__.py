@@ -4,7 +4,9 @@ from urllib import parse, request
 
 
 def get_input(year, day):
-    p = Path(f"aoc_infile_{year}_{day}")
+    basepath = Path(f"{os.environ['HOME']}/.cache/aoc")
+    basepath.mkdir(parents=True, exist_ok=True)
+    p = basepath / f"infile_{year}_{day}"
     try:
         aoc_input = p.read_text()
     except FileNotFoundError:
