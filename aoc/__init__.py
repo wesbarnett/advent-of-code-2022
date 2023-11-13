@@ -29,7 +29,6 @@ def submit(answer: int, year: int, day: int, level: int) -> None:
     """Submit answer to Advent of Code for given day, year, and level."""
     url = f"https://adventofcode.com/{year}/day/{day}/answer"
     headers = {"Cookie": f"session={os.environ['AOC_COOKIE']}"}
-    req = request.Request(url, headers=headers)
     data = parse.urlencode({"level": level, "answer": answer}).encode()
     req = request.Request(url, data=data, headers=headers)
     with request.urlopen(req) as response:
