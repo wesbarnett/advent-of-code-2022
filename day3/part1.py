@@ -18,7 +18,7 @@ if __name__ == "__main__":
     for line in lines:
         mid = len(line) // 2
         first, sec = set(line[:mid]), set(line[mid:])
-        dup = first.intersection(sec)
+        dup = first & sec
         total_priority += priority[str(*dup)]
 
     print(total_priority)
