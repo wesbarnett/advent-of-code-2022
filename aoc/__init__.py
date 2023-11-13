@@ -1,3 +1,8 @@
+"""
+Helper functions for Advent of Code. You will need to get your session cookie after logging in and save to the
+environment variable AOC_COOKIE.
+"""
+
 import os
 from pathlib import Path
 from urllib import parse, request
@@ -21,7 +26,7 @@ def get_input(year: int, day: int) -> str:
 
 
 def submit(answer: int, year: int, day: int, level: int) -> None:
-    """Submit answer to Advent of Code for given day, year, and level"""
+    """Submit answer to Advent of Code for given day, year, and level."""
     url = f"https://adventofcode.com/{year}/day/{day}/answer"
     headers = {"Cookie": f"session={os.environ['AOC_COOKIE']}"}
     req = request.Request(url, headers=headers)
