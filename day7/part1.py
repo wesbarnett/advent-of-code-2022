@@ -1,4 +1,4 @@
-from aoc import get_input  # , submit
+from aoc import get_input, submit
 
 
 class Node:
@@ -66,7 +66,7 @@ if __name__ == "__main__":
         for f in node.files:
             size += f.size
 
-        if size > 100000:
+        if size < 100000:
             total_size += size
 
         return size, total_size
@@ -75,4 +75,4 @@ if __name__ == "__main__":
 
     print(total_size)
 
-    # submit(total_size, year, day, level)
+    submit(total_size, year, day, level)
