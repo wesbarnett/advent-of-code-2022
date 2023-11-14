@@ -27,36 +27,38 @@ if __name__ == "__main__":
             elif d == "D":
                 rope[0][1] -= 1
 
-        for i in range(9):
+            for i in range(9):
 
-            head = rope[i]
-            tail = rope[i + 1]
+                head = rope[i]
+                tail = rope[i + 1]
 
-            if abs(tail[0] - head[0]) in [0, 1] and abs(tail[1] - head[1]) in [0, 1]:
-                continue
-            elif tail[0] == head[0] and tail[1] == (head[1] + 2):
-                tail[1] = head[1] + 1
-            elif tail[0] == head[0] and tail[1] == (head[1] - 2):
-                tail[1] = head[1] - 1
-            elif tail[0] == (head[0] + 2) and tail[1] == head[1]:
-                tail[0] = head[0] + 1
-            elif tail[0] == (head[0] - 2) and tail[1] == head[1]:
-                tail[0] = head[0] - 1
-            elif head[0] > tail[0] and head[1] > tail[1]:
-                tail[0] += 1
-                tail[1] += 1
-            elif head[0] < tail[0] and head[1] > tail[1]:
-                tail[0] -= 1
-                tail[1] += 1
-            elif head[0] < tail[0] and head[1] < tail[1]:
-                tail[0] -= 1
-                tail[1] -= 1
-            elif head[0] > tail[0] and head[1] < tail[1]:
-                tail[0] += 1
-                tail[1] -= 1
+                if abs(tail[0] - head[0]) in [0, 1] and abs(tail[1] - head[1]) in [
+                    0,
+                    1,
+                ]:
+                    continue
+                elif tail[0] == head[0] and tail[1] == (head[1] + 2):
+                    tail[1] = head[1] + 1
+                elif tail[0] == head[0] and tail[1] == (head[1] - 2):
+                    tail[1] = head[1] - 1
+                elif tail[0] == (head[0] + 2) and tail[1] == head[1]:
+                    tail[0] = head[0] + 1
+                elif tail[0] == (head[0] - 2) and tail[1] == head[1]:
+                    tail[0] = head[0] - 1
+                elif head[0] > tail[0] and head[1] > tail[1]:
+                    tail[0] += 1
+                    tail[1] += 1
+                elif head[0] < tail[0] and head[1] > tail[1]:
+                    tail[0] -= 1
+                    tail[1] += 1
+                elif head[0] < tail[0] and head[1] < tail[1]:
+                    tail[0] -= 1
+                    tail[1] -= 1
+                elif head[0] > tail[0] and head[1] < tail[1]:
+                    tail[0] += 1
+                    tail[1] -= 1
 
-            if i == 8:
-                tail_pos[tuple(tail)] = True
+            tail_pos[tuple(rope[-1])] = True
 
     ans = sum(tail_pos.values())
     print(ans)
