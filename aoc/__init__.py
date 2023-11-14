@@ -5,6 +5,7 @@ environment variable AOC_COOKIE.
 
 import os
 from pathlib import Path
+from typing import Any
 from urllib import parse, request
 
 
@@ -25,7 +26,7 @@ def get_input(year: int, day: int) -> str:
     return aoc_input
 
 
-def submit(answer: int, year: int, day: int, level: int) -> None:
+def submit(answer: Any, year: int, day: int, level: int) -> None:
     """Submit answer to Advent of Code for given day, year, and level."""
     url = f"https://adventofcode.com/{year}/day/{day}/answer"
     headers = {"Cookie": f"session={os.environ['AOC_COOKIE']}"}
