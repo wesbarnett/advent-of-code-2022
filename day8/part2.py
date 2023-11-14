@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from aoc import get_input  # , submit
+from aoc import get_input, submit
 
 if __name__ == "__main__":
     year, day, level = 2022, 8, 2
@@ -38,19 +38,19 @@ if __name__ == "__main__":
         for j, tree in enumerate(column):
 
             score = 0
-            for k in range(i - 1, -1, -1):
+            for k in range(j - 1, -1, -1):
                 score += 1
                 if column[k] >= tree:
                     break
             score_map[(i, j)] *= score
 
             score = 0
-            for k in range(i + 1, nrows, 1):
+            for k in range(j + 1, nrows, 1):
                 score += 1
-                if row[k] >= tree:
+                if column[k] >= tree:
                     break
             score_map[(i, j)] *= score
 
     ans = max(score_map.values())
     print(ans)
-    # submit(ans, year, day, level)
+    submit(ans, year, day, level)
