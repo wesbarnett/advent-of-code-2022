@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from aoc import get_input  # , submit
+from aoc import get_input, submit
 
 if __name__ == "__main__":
     year, day, level = 2022, 9, 1
@@ -28,7 +28,6 @@ if __name__ == "__main__":
             elif d == "D":
                 head[1] -= 1
 
-            # same location or adjacent
             if abs(tail[0] - head[0]) in [0, 1] and abs(tail[1] - head[1]) in [0, 1]:
                 continue
             elif tail[0] == head[0] and tail[1] == (head[1] + 2):
@@ -40,20 +39,20 @@ if __name__ == "__main__":
             elif tail[0] == (head[0] - 2) and tail[1] == head[1]:
                 tail[0] = head[0] - 1
             elif head[0] > tail[0] and head[1] > tail[1]:
-                tail[0] = head[0] - 1
-                tail[1] = head[1] - 1
+                tail[0] += 1
+                tail[1] += 1
             elif head[0] < tail[0] and head[1] > tail[1]:
-                tail[0] = head[0] + 1
-                tail[1] = head[1] - 1
+                tail[0] -= 1
+                tail[1] += 1
             elif head[0] < tail[0] and head[1] < tail[1]:
-                tail[0] = head[0] + 1
-                tail[1] = head[1] + 1
+                tail[0] -= 1
+                tail[1] -= 1
             elif head[0] > tail[0] and head[1] < tail[1]:
-                tail[0] = head[0] - 1
-                tail[1] = head[1] + 1
+                tail[0] += 1
+                tail[1] -= 1
 
             tail_pos[tuple(tail)] = True
 
     ans = sum(tail_pos.values())
     print(ans)
-    # submit(ans, year, day, level)
+    submit(ans, year, day, level)
