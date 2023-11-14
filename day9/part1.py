@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from aoc import get_input  # , submit
 
 if __name__ == "__main__":
@@ -8,55 +10,50 @@ if __name__ == "__main__":
     head = [0, 0]
     tail = [0, 0]
 
-    nlocs = 0
+    tail_pos = defaultdict(lambda: False)
+    tail_pos[tuple(tail)] = True
+
     for line in lines:
         d, m = line.split(" ")
         m = int(m)
 
-        if d == "L":
-            head[0] -= m
-        elif d == "R":
-            head[0] += m
-        elif d == "U":
-            head[1] += m
-        elif d == "D":
-            head[1] -= m
+        for _ in range(m):
 
-        # same location or adjacent
-        if (
-            (tail == head)
-            or (tail[0] == head[0] - 1 and tail[1] == head[1])
-            or (tail[0] == head[0] + 1 and tail[1] == head[1])
-            or (tail[0] == head[0] and tail[1] == head[1] - 1)
-            or (tail[0] == head[0] and tail[1] == head[1] + 1)
-            or (tail[0] == head[0] + 1 and tail[1] == head[1] + 1)
-            or (tail[0] == head[0] - 1 and tail[1] == head[1] - 1)
-            or (tail[0] == head[0] + 1 and tail[1] == head[1] - 1)
-            or (tail[0] == head[0] - 1 and tail[1] == head[1] + 1)
-        ):
-            continue
-        elif tail[0] == head[0] and tail[1] == head[1] + 2:
-            tail[1] -= 1
-        elif tail[0] == head[0] and tail[1] == head[1] - 2:
-            tail[1] += 1
-        elif tail[0] == head[0] + 2 and tail[1] == head[1]:
-            tail[0] -= 1
-        elif tail[0] == head[0] - 2 and tail[1] == head[1]:
-            tail[0] += 1
-        elif head[0] > tail[0] and head[1] > tail[1]:
-            tail[0] += 1
-            tail[1] += 1
-        elif head[0] < tail[0] and head[1] > tail[1]:
-            tail[0] -= 1
-            tail[1] += 1
-        elif head[0] < tail[0] and head[1] < tail[1]:
-            tail[0] -= 1
-            tail[1] -= 1
-        elif head[0] > tail[0] and head[1] < tail[1]:
-            tail[0] += 1
-            tail[1] -= 1
+            if d == "L":
+                head[0] -= 1
+            elif d == "R":
+                head[0] += 1
+            elif d == "U":
+                head[1] += 1
+            elif d == "D":
+                head[1] -= 1
 
-        nlocs += 1
+            # same location or adjacent
+            if abs(tail[0] - head[0]) in [0, 1] and abs(tail[1] - head[1]) in [0, 1]:
+                continue
+            elif tail[0] == head[0] and tail[1] == (head[1] + 2):
+                tail[1] = head[1] + 1
+            elif tail[0] == head[0] and tail[1] == (head[1] - 2):
+                tail[1] = head[1] - 1
+            elif tail[0] == (head[0] + 2) and tail[1] == head[1]:
+                tail[0] = head[0] + 1
+            elif tail[0] == (head[0] - 2) and tail[1] == head[1]:
+                tail[0] = head[0] - 1
+            elif head[0] > tail[0] and head[1] > tail[1]:
+                tail[0] = head[0] - 1
+                tail[1] = head[1] - 1
+            elif head[0] < tail[0] and head[1] > tail[1]:
+                tail[0] = head[0] + 1
+                tail[1] = head[1] - 1
+            elif head[0] < tail[0] and head[1] < tail[1]:
+                tail[0] = head[0] + 1
+                tail[1] = head[1] + 1
+            elif head[0] > tail[0] and head[1] < tail[1]:
+                tail[0] = head[0] - 1
+                tail[1] = head[1] + 1
 
-    print(nlocs)
-    # submit(nlocs, year, day, level)
+            tail_pos[tuple(tail)] = True
+
+    ans = sum(tail_pos.values())
+    print(ans)
+    # submit(ans, year, day, level)
