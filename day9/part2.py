@@ -16,50 +16,47 @@ if __name__ == "__main__":
         d, m = line.split(" ")
         m = int(m)
 
+        for _ in range(m):
+
+            if d == "L":
+                rope[0][0] -= 1
+            elif d == "R":
+                rope[0][0] += 1
+            elif d == "U":
+                rope[0][1] += 1
+            elif d == "D":
+                rope[0][1] -= 1
+
         for i in range(9):
 
             head = rope[i]
             tail = rope[i + 1]
 
-            for _ in range(m):
+            if abs(tail[0] - head[0]) in [0, 1] and abs(tail[1] - head[1]) in [0, 1]:
+                continue
+            elif tail[0] == head[0] and tail[1] == (head[1] + 2):
+                tail[1] = head[1] + 1
+            elif tail[0] == head[0] and tail[1] == (head[1] - 2):
+                tail[1] = head[1] - 1
+            elif tail[0] == (head[0] + 2) and tail[1] == head[1]:
+                tail[0] = head[0] + 1
+            elif tail[0] == (head[0] - 2) and tail[1] == head[1]:
+                tail[0] = head[0] - 1
+            elif head[0] > tail[0] and head[1] > tail[1]:
+                tail[0] += 1
+                tail[1] += 1
+            elif head[0] < tail[0] and head[1] > tail[1]:
+                tail[0] -= 1
+                tail[1] += 1
+            elif head[0] < tail[0] and head[1] < tail[1]:
+                tail[0] -= 1
+                tail[1] -= 1
+            elif head[0] > tail[0] and head[1] < tail[1]:
+                tail[0] += 1
+                tail[1] -= 1
 
-                if d == "L":
-                    head[0] -= 1
-                elif d == "R":
-                    head[0] += 1
-                elif d == "U":
-                    head[1] += 1
-                elif d == "D":
-                    head[1] -= 1
-
-                if abs(tail[0] - head[0]) in [0, 1] and abs(tail[1] - head[1]) in [
-                    0,
-                    1,
-                ]:
-                    continue
-                elif tail[0] == head[0] and tail[1] == (head[1] + 2):
-                    tail[1] = head[1] + 1
-                elif tail[0] == head[0] and tail[1] == (head[1] - 2):
-                    tail[1] = head[1] - 1
-                elif tail[0] == (head[0] + 2) and tail[1] == head[1]:
-                    tail[0] = head[0] + 1
-                elif tail[0] == (head[0] - 2) and tail[1] == head[1]:
-                    tail[0] = head[0] - 1
-                elif head[0] > tail[0] and head[1] > tail[1]:
-                    tail[0] += 1
-                    tail[1] += 1
-                elif head[0] < tail[0] and head[1] > tail[1]:
-                    tail[0] -= 1
-                    tail[1] += 1
-                elif head[0] < tail[0] and head[1] < tail[1]:
-                    tail[0] -= 1
-                    tail[1] -= 1
-                elif head[0] > tail[0] and head[1] < tail[1]:
-                    tail[0] += 1
-                    tail[1] -= 1
-
-                if i == 8:
-                    tail_pos[tuple(tail)] = True
+            if i == 8:
+                tail_pos[tuple(tail)] = True
 
     ans = sum(tail_pos.values())
     print(ans)
