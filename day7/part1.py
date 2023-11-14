@@ -53,6 +53,26 @@ if __name__ == "__main__":
                 node.add_dir(line.split(" ")[-1], parent=node)
             else:
                 size, name = line.split(" ")
-                node.add_file(name, parent=node, size=size)
+                node.add_file(name, parent=node, size=int(size))
 
-    # submit(ans, year, day, level)
+    node = node.parent
+
+    def traverse(node, total_size=0):
+        size = 0
+        for d in node.dirs:
+            s, total_size = traverse(d, total_size)
+            size += s
+
+        for f in node.files:
+            size += f.size
+
+        if size > 100000:
+            total_size += size
+
+        return size, total_size
+
+    size, total_size = traverse(node)
+
+    print(total_size)
+
+    # submit(total_size, year, day, level)
