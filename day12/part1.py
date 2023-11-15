@@ -11,72 +11,41 @@ if __name__ == "__main__":
 
     nrows = len(grid)
     ncols = len(grid[0])
+    visited = set()
+    step_mapper = {}
+
     for j, row in enumerate(grid):
         for i, item in enumerate(row):
             if item == "S":
                 start = (i, j)
-
-    steps = {}
-    visited = set()
-
-    i, j = start
+                break
 
     def move(i, j):
-        cur = grid[j][i]
         visited.add((i, j))
-        print(i, j)
-        print(cur)
 
-        if (i, j) in steps:
-            return steps[(i, j)]
+        if grid[j][i] == "E":
+            return 0
 
-        if cur == "E":
-            steps[(i, j)] = 0
-            return steps[(i, j)]
+        if (i, j) in step_mapper:
+            return step_mapper[(i, j)]
 
-        if cur == "S":
-            cur = "a"
+        steps = float("inf")
 
-        if j + 1 < nrows and (i, j + 1) not in visited:
-            up = grid[j + 1][i]
-            if ord(up) - ord(cur) <= 1:
-                steps_up = move(i, j + 1)
-            else:
-                steps_up = float("inf")
-        else:
-            steps_up = float("inf")
+        for x, y in [(i, j + 1), (i, j - 1), (i + 1, j), (i - 1, j)]:
+            if x >= 0 and y >= 0 and x < ncols and y < nrows and (x, y) not in visited:
+                if grid[y][x] == "E":
+                    val = ord("z")
+                else:
+                    val = ord(grid[y][x])
 
-        if j - 1 >= 0 and (i, j - 1) not in visited:
-            down = grid[j - 1][i]
-            if ord(down) - ord(cur) <= 1:
-                steps_down = move(i, j - 1)
-            else:
-                steps_down = float("inf")
-        else:
-            steps_down = float("inf")
+                if val - ord(grid[j][i]) <= 1:
+                    steps = min(move(x, y), steps)
 
-        if i + 1 < ncols and (i + 1, j) not in visited:
-            right = grid[j][i + 1]
-            if ord(right) - ord(cur) <= 1:
-                steps_right = move(i + 1, j)
-            else:
-                steps_right = float("inf")
-        else:
-            steps_right = float("inf")
+        visited.remove((i, j))
+        step_mapper[(i, j)] = steps + 1
+        return step_mapper[(i, j)]
 
-        if i - 1 >= 0 and (i - 1, j) not in visited:
-            left = grid[j][i - 1]
-            if ord(left) - ord(cur) <= 1:
-                steps_left = move(i - 1, j)
-            else:
-                steps_left = float("inf")
-        else:
-            steps_left = float("inf")
-
-        steps[(i, j)] = min(steps_up, steps_down, steps_right, steps_left) + 1
-        print(steps[(i, j)])
-        return steps[(i, j)]
-
-    steps = move(i, j)
-    print(steps)
+    i, j = start
+    grid[j][i] = "a"
+    print(move(i, j))
     # submit(ans, year, day, level)
