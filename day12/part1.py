@@ -33,11 +33,7 @@ if __name__ == "__main__":
 
         for x, y in [(i, j + 1), (i, j - 1), (i + 1, j), (i - 1, j)]:
             if x >= 0 and y >= 0 and x < ncols and y < nrows and (x, y) not in visited:
-                if grid[y][x] == "E":
-                    val = ord("z")
-                else:
-                    val = ord(grid[y][x])
-
+                val = ord("z") if grid[y][x] == "E" else ord(grid[y][x])
                 if val - ord(grid[j][i]) <= 1:
                     steps = min(move(x, y), steps)
 
