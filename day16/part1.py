@@ -1,25 +1,24 @@
-from enum import Enum, auto
+from collections import deque
+from itertools import product
 
 from aoc import get_input  # , submit
 
 
-class ValveState(Enum):
-    OPEN = auto()
-    CLOSED = auto()
+def floyd_warshall(graph, indices):
+    n = len(indices)
+    dist = [[float("inf") for _ in range(n)] for _ in range(n)]
 
+    for k in graph.keys():
+        dist[indices[k]][indices[k]] = 0
 
-class Valve:
-    def __init__(self, name, rate, neighbs=None):
-        self.name = name
-        self.rate = rate
-        if neighbs is None:
-            self.neighbs = []
-        else:
-            self.neighbs = neighbs
-        self.state = ValveState.CLOSED
+    for k, vals in graph.items():
+        for v in vals:
+            dist[indices[k]][indices[v]] = 1
 
-    def __repr__(self):
-        return f"Valve(name={self.name}, rate={self.rate}, neighbs={self.neighbs}, state={self.state})"
+    for k, i, j in product(range(n), range(n), range(n)):
+        if dist[i][j] > dist[i][k] + dist[k][j]:
+            dist[i][j] = dist[i][k] + dist[k][j]
+    return dist
 
 
 if __name__ == "__main__":
@@ -38,47 +37,34 @@ Valve JJ has flow rate=21; tunnel leads to valve II
 """
     lines = aoc_input.rstrip("\n").split("\n")
     valves = {}
-    for line in lines:
-        first, sec = line.split("; ")
-        valve_name = first.split(" ")[1]
-        rate = int(first.split(" ")[-1].removeprefix("rate="))
-        valves[valve_name] = Valve(valve_name, rate)
+    valve_graph = {}
+    valve_indices = {}
+    unvisited = set()
+    rates = {}
 
-    for line in lines:
+    for i, line in enumerate(lines):
         first, sec = line.split("; ")
         valve_name = first.split(" ")[1]
         neighbs = sec.removeprefix("tunnels lead to valves ").split(", ")
+        rates[valve_name] = int(first.split(" ")[-1].removeprefix("rate="))
         if len(neighbs) == 1:
             neighbs = [sec.removeprefix("tunnel leads to valve ")]
-        print([valves[n] for n in neighbs])
-        valves[valve_name].neighbs = [valves[n] for n in neighbs]
+        valve_graph[valve_name] = neighbs
+        valve_indices[valve_name] = i
+        valves[i] = valve_name
+        if rates[valve_name] != 0:
+            unvisited.add(valve_name)
 
+    dist = floyd_warshall(valve_graph, valve_indices)
+
+    pressure = 0
+    queue = deque([])
+    queue.append(("AA", 30))
     time = 30
-
-    def traverse(valve):
-        global time
-        print(valve.name)
-        print(time)
-        time -= 1
-        if time <= 0:
-            return 0
-
-        if valve.rate > 0 and valve.state == ValveState.CLOSED:
-            valve.state = ValveState.OPEN
-            time -= 1
-            if time <= 0:
-                return 0
-
-        if valve.state == ValveState.OPEN:
-            pressure = time * valve.rate
-        else:
-            pressure = 0
-
-        for n in valve.neighbs:
-            pressure += traverse(n)
-
-        return pressure
-
-    print(traverse(valves["AA"]))
+    while queue:
+        node = queue.popleft()
+        for neighb in valve_graph[node]:
+            time = time - dist[valve_indices[node]]
+            queue.append(neighb)
 
     # submit(count, year, day, level)
