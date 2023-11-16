@@ -1,5 +1,4 @@
-from collections import deque
-from itertools import product
+from itertools import permutations, product
 
 from aoc import get_input  # , submit
 
@@ -38,6 +37,7 @@ Valve JJ has flow rate=21; tunnel leads to valve II
     lines = aoc_input.rstrip("\n").split("\n")
     valves = {}
     valve_graph = {}
+    valve_list = []
     valve_indices = {}
     unvisited = set()
     rates = {}
@@ -53,18 +53,23 @@ Valve JJ has flow rate=21; tunnel leads to valve II
         valve_indices[valve_name] = i
         valves[i] = valve_name
         if rates[valve_name] != 0:
-            unvisited.add(valve_name)
+            valve_list.append(valve_name)
 
     dist = floyd_warshall(valve_graph, valve_indices)
 
-    pressure = 0
-    queue = deque([])
-    queue.append(("AA", 30))
-    time = 30
-    while queue:
-        node = queue.popleft()
-        for neighb in valve_graph[node]:
-            time = time - dist[valve_indices[node]]
-            queue.append(neighb)
+    max_pressure = float("-inf")
+    for perm in permutations(valve_list):
+        time = 30
+        valve = "AA"
+        pressure = 0
+        for new_valve in perm:
+            time = time - dist[valve_indices[valve]][valve_indices[new_valve]] - 1
+            if time <= 0:
+                break
+            pressure += rates[new_valve] * time
+            valve = new_valve
+        if pressure > max_pressure:
+            max_pressure = pressure
 
+    print(max_pressure)
     # submit(count, year, day, level)
