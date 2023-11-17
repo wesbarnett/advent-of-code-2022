@@ -1,6 +1,7 @@
 from copy import deepcopy
+from itertools import cycle
 
-from aoc import get_input  # , submit
+from aoc import get_input, submit
 
 
 class Rock:
@@ -77,14 +78,14 @@ class Rock:
         else:
             raise ValueError("shape must be an integer 0 through 4")
 
-    def __call__(self, wind, bot):
+    def __call__(self, wind, filled):
         new_loc = deepcopy(self.loc)
 
         if wind == ">":
             for r in new_loc:
                 r[0] += 1
-                # hit wall, reject movement
-                if r[0] > 7:
+                # hit wall or rock, reject movement
+                if r[0] > 7 or tuple(r) in filled:
                     new_loc = deepcopy(self.loc)
                     break
 
@@ -92,7 +93,7 @@ class Rock:
             for r in new_loc:
                 r[0] -= 1
                 # hit wall, reject movement
-                if r[0] < 1:
+                if r[0] < 1 or tuple(r) in filled:
                     new_loc = deepcopy(self.loc)
                     break
 
@@ -102,7 +103,7 @@ class Rock:
         for r in new_loc:
             r[1] -= 1
             # hit bottom (rock or floor), reject move
-            if r[1] <= bot:
+            if tuple(r) in filled:
                 return False
 
         self.loc = deepcopy(new_loc)
@@ -112,15 +113,24 @@ class Rock:
 if __name__ == "__main__":
     year, day, level = 2022, 17, 1
     aoc_input = get_input(year, day)
-    wind = aoc_input.rstrip("\n")
-    wind = ">>><<><>><<<>><>>><<<>>><<<><<<>><>><<>>"
+    wind = cycle(list(aoc_input.rstrip("\n")))
+    shapes = cycle(range(5))
 
-    rock = Rock(shape=0, x=0, y=0)
+    filled = set()
+    for x in range(1, 8):
+        filled.add((x, 0))
 
-    for w in wind:
-        if not rock(w, bot=0):
-            break
+    max_y = 0
+    for _ in range(2022):
+        rock = Rock(shape=next(shapes), x=0, y=max_y)
+        while True:
+            w = next(wind)
+            if not rock(w, filled):
+                # rock is at rest
+                for r in rock.loc:
+                    max_y = max(r[1], max_y)
+                    filled.add(tuple(r))
+                break
 
-    print(rock.loc)
-
-    # submit(max_pressure, year, day, level)
+    print(max_y)
+    submit(max_y, year, day, level)
