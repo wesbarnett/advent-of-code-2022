@@ -64,8 +64,10 @@ if __name__ == "__main__":
                     dp2[*k, valve] = pressure
                     dt2[*k, valve] = time
         dp, dt = dp2, dt2
-        print(max(dp.values()))
+        try:
+            max_pressure = max(dp.values())
+        except ValueError:
+            pass
 
-    print(max(dp.values()))
-
+    print(max_pressure)
     # submit(max_pressure, year, day, level)
